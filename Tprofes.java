@@ -1,0 +1,575 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package ACADEMIA;
+
+import Controlador.Conexionaca;
+import java.awt.Color;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
+/**
+ *
+ * @author kt
+ */
+public class Tprofes extends javax.swing.JInternalFrame {
+
+    Conexionaca con=new Conexionaca();
+    Connection  cnn=con.Conexionacadb();
+    PreparedStatement op=null;
+    ResultSet rs=null;
+    
+    public Tprofes() {
+        initComponents();
+        cargatabla();
+    }
+    public void cargatabla(){
+    DefaultTableModel tabla=new DefaultTableModel ();
+        tabla.addColumn("Documento");
+        tabla.addColumn("Nombre Profesor");
+        tabla.addColumn("Apellido");
+        tabla.addColumn("Categoria");
+        tabla.addColumn("Salario");
+        tabla.addColumn("Clave");
+        profesor.setModel(tabla);
+        String datos[]=new String[6];
+        
+        try{
+         op=cnn.prepareStatement("SELECT *FROM Profesor");
+         rs=op.executeQuery();
+         while (rs.next()){
+           datos[0]=rs.getString(1);
+           datos[1]=rs.getString(2);
+           datos[2]=rs.getString(3);
+           datos[3]=rs.getString(4);
+           datos[4]=rs.getString(5);
+           datos[5]=rs.getString(6);
+           tabla.addRow(datos);
+         }
+        } catch (Exception e) {
+            System.out.print(e);
+        }
+}
+     public void filtrar(){
+    DefaultTableModel tabla=new DefaultTableModel ();
+        tabla.addColumn("Documento");
+        tabla.addColumn("Nombre Profesor");
+        tabla.addColumn("Apellido");
+        tabla.addColumn("Categoria");
+        tabla.addColumn("Salario");
+        tabla.addColumn("Clave");
+        profesor.setModel(tabla);
+        String datos[]=new String[6];
+        
+        try{
+         op=cnn.prepareStatement("SELECT *FROM Profesor where Pro_doc_prof like '%"+FILTRO.getText()+"%' or  Pro_Nom like '%"+FILTRO.getText()+"%' or  Pro_Apell  like '%"+FILTRO.getText()+"%' or Pro_cate like '%"+FILTRO.getText()+"%' or Pro_sal like '%"+FILTRO.getText()+"%' or Pro_clave like '%"+FILTRO.getText()+"%'");
+         rs=op.executeQuery();
+         while (rs.next()){
+           datos[0]=rs.getString(1);
+           datos[1]=rs.getString(2);
+           datos[2]=rs.getString(3);
+           datos[3]=rs.getString(4);
+           datos[4]=rs.getString(5);
+           datos[5]=rs.getString(6);
+           tabla.addRow(datos);
+         }
+        } catch (Exception e) {
+            System.out.print(e);
+        }
+}
+       public void listardatos(){
+     
+      int lis=profesor.getSelectedRow();
+     if(lis>=0){ 
+    DOC.setText(profesor.getValueAt(lis,0).toString());
+    NOM.setText(profesor.getValueAt(lis,1).toString());
+    APE.setText(profesor.getValueAt(lis,2).toString());
+     CATE.setText(profesor.getValueAt(lis,3).toString());
+     SAL.setText(profesor.getValueAt(lis,4).toString());
+    CLAVE.setText(profesor.getValueAt(lis,5).toString());
+     }
+  }
+  
+      public void Registrar(){
+        try {
+            op=cnn.prepareStatement(" INSERT INTO Profesor( Pro_doc_prof , Pro_Nom , Pro_Apell  , Pro_cate , Pro_sal,Pro_clave) Values(?,?,?,?,?,?)");  
+              op.setString(1,DOC.getText());
+              op.setString(2,NOM.getText());
+              op.setString(3,APE.getText());
+              op.setInt(4,Integer.parseInt(CATE.getText()));
+              op.setInt(5,Integer.parseInt(SAL.getText()));
+              op.setString(6,CLAVE.getText());  
+             op.executeUpdate();
+             JOptionPane.showMessageDialog(null,"Datos Guardados");
+             
+        } catch (Exception e) {
+            System.out.println("eee"+e);
+        }
+    
+    }
+     public void Eliminar(String dat){
+    try {
+   op=cnn.prepareStatement("DELETE from Profesor where Pro_doc_prof ='"+dat+"'");
+      op.executeUpdate();
+      JOptionPane.showMessageDialog(null,"Datos Eliminados");
+        } catch (Exception e) {
+             System.out.println("eee"+e);
+        }
+    
+    } 
+       public void modificar(String doc ,String nom, String ape,String cate,String sal,String cla){
+        
+        try {
+         op=cnn.prepareStatement("UPDATE  Profesor set  Pro_Nom='"+nom+"',Pro_Apell='"+ape+"',Pro_cate='"+cate+"' , Pro_sal='"+sal+"',Pro_clave='"+cla+"' where Pro_doc_prof='"+doc+"'");
+           op.executeUpdate();
+            JOptionPane.showMessageDialog(null,"Datos modificados");
+            
+        } catch (Exception e) {
+         System.out.println("eee"+e);  
+        }
+    }
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        ingresar = new javax.swing.JButton();
+        elim = new javax.swing.JButton();
+        lim = new javax.swing.JButton();
+        DOC = new javax.swing.JTextField();
+        NOM = new javax.swing.JTextField();
+        APE = new javax.swing.JTextField();
+        CATE = new javax.swing.JTextField();
+        SAL = new javax.swing.JTextField();
+        CLAVE = new javax.swing.JTextField();
+        FILTRO = new javax.swing.JTextField();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        profesor = new javax.swing.JTable();
+        modi = new javax.swing.JButton();
+        bus = new javax.swing.JButton();
+        jLabel7 = new javax.swing.JLabel();
+
+        setBackground(new java.awt.Color(153, 204, 255));
+        setClosable(true);
+        setIconifiable(true);
+        setMaximizable(true);
+        setTitle("PROFESORES");
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        getContentPane().setLayout(null);
+
+        jLabel1.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(51, 0, 255));
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("DOCUMENTO");
+        getContentPane().add(jLabel1);
+        jLabel1.setBounds(70, 60, 90, 14);
+
+        jLabel2.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(51, 0, 255));
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText("NOMBRE");
+        getContentPane().add(jLabel2);
+        jLabel2.setBounds(70, 90, 80, 14);
+
+        jLabel3.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(51, 0, 255));
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel3.setText("APELLIDO");
+        getContentPane().add(jLabel3);
+        jLabel3.setBounds(60, 120, 90, 14);
+
+        jLabel4.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(51, 0, 255));
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel4.setText("CATEGORIA");
+        getContentPane().add(jLabel4);
+        jLabel4.setBounds(60, 150, 90, 20);
+
+        jLabel5.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(51, 0, 255));
+        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel5.setText("SALARIO");
+        getContentPane().add(jLabel5);
+        jLabel5.setBounds(60, 180, 90, 14);
+
+        jLabel6.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(51, 0, 255));
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel6.setText("CLAVE");
+        getContentPane().add(jLabel6);
+        jLabel6.setBounds(80, 210, 50, 14);
+
+        ingresar.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        ingresar.setForeground(new java.awt.Color(255, 0, 0));
+        ingresar.setText("INGRESAR");
+        ingresar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ingresarActionPerformed(evt);
+            }
+        });
+        ingresar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                ingresarKeyPressed(evt);
+            }
+        });
+        getContentPane().add(ingresar);
+        ingresar.setBounds(0, 0, 100, 20);
+
+        elim.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        elim.setForeground(new java.awt.Color(255, 0, 0));
+        elim.setText("ELIMINAR ");
+        elim.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                elimActionPerformed(evt);
+            }
+        });
+        elim.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                elimKeyPressed(evt);
+            }
+        });
+        getContentPane().add(elim);
+        elim.setBounds(200, 0, 100, 20);
+
+        lim.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        lim.setForeground(new java.awt.Color(255, 0, 0));
+        lim.setText("LIMPIAR");
+        lim.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                limActionPerformed(evt);
+            }
+        });
+        lim.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                limKeyPressed(evt);
+            }
+        });
+        getContentPane().add(lim);
+        lim.setBounds(300, 0, 100, 20);
+
+        DOC.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        DOC.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        DOC.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                DOCKeyTyped(evt);
+            }
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                DOCKeyPressed(evt);
+            }
+        });
+        getContentPane().add(DOC);
+        DOC.setBounds(190, 60, 160, 20);
+
+        NOM.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        NOM.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        NOM.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                NOMKeyTyped(evt);
+            }
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                NOMKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                NOMKeyReleased(evt);
+            }
+        });
+        getContentPane().add(NOM);
+        NOM.setBounds(190, 90, 160, 20);
+
+        APE.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        APE.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        APE.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                APEKeyTyped(evt);
+            }
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                APEKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                APEKeyReleased(evt);
+            }
+        });
+        getContentPane().add(APE);
+        APE.setBounds(190, 120, 160, 20);
+
+        CATE.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        CATE.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        CATE.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                CATEKeyTyped(evt);
+            }
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                CATEKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                CATEKeyReleased(evt);
+            }
+        });
+        getContentPane().add(CATE);
+        CATE.setBounds(190, 150, 160, 20);
+
+        SAL.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        SAL.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        SAL.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                SALKeyTyped(evt);
+            }
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                SALKeyPressed(evt);
+            }
+        });
+        getContentPane().add(SAL);
+        SAL.setBounds(190, 180, 160, 20);
+
+        CLAVE.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        CLAVE.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        getContentPane().add(CLAVE);
+        CLAVE.setBounds(190, 210, 160, 20);
+        getContentPane().add(FILTRO);
+        FILTRO.setBounds(480, 0, 160, 20);
+
+        profesor.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+
+            }
+        ));
+        profesor.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                profesorMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(profesor);
+
+        getContentPane().add(jScrollPane1);
+        jScrollPane1.setBounds(10, 270, 630, 110);
+
+        modi.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        modi.setForeground(new java.awt.Color(255, 0, 0));
+        modi.setText("MODIFICAR");
+        modi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                modiActionPerformed(evt);
+            }
+        });
+        modi.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                modiKeyPressed(evt);
+            }
+        });
+        getContentPane().add(modi);
+        modi.setBounds(100, 0, 100, 20);
+
+        bus.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
+        bus.setForeground(new java.awt.Color(204, 0, 0));
+        bus.setText("BUSCAR");
+        bus.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                busMouseClicked(evt);
+            }
+        });
+        bus.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                busKeyReleased(evt);
+            }
+        });
+        getContentPane().add(bus);
+        bus.setBounds(400, 0, 80, 20);
+
+        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/IMAGENES/acade.jpg"))); // NOI18N
+        getContentPane().add(jLabel7);
+        jLabel7.setBounds(0, 0, 650, 410);
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void ingresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ingresarActionPerformed
+      Registrar();
+      cargatabla();
+    }//GEN-LAST:event_ingresarActionPerformed
+
+    private void elimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_elimActionPerformed
+        String dat=DOC.getText();
+        Eliminar(dat);
+        cargatabla();
+    }//GEN-LAST:event_elimActionPerformed
+
+    private void limActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_limActionPerformed
+      DOC.setText(null);
+      NOM.setText(null);
+      APE.setText(null);
+      CATE.setText(null);
+      SAL.setText(null);
+      CLAVE.setText(null);
+      FILTRO.setText(null);
+    }//GEN-LAST:event_limActionPerformed
+
+    private void DOCKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_DOCKeyTyped
+    char c=evt.getKeyChar();
+     if (!Character.isDigit(c)){
+         evt.consume();
+    }//GEN-LAST:event_DOCKeyTyped
+    }
+    private void CATEKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_CATEKeyTyped
+     char c=evt.getKeyChar();
+     if (!Character.isDigit(c)){
+         evt.consume();
+    }//GEN-LAST:event_CATEKeyTyped
+    }
+    private void SALKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_SALKeyTyped
+   char c=evt.getKeyChar();
+     if (!Character.isDigit(c)){
+         evt.consume();
+    }//GEN-LAST:event_SALKeyTyped
+    }
+    private void NOMKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_NOMKeyTyped
+   String texto=NOM.getText();
+     if(texto.length()>0) {
+         char primeraletra=texto.charAt(0);
+         texto=Character.toUpperCase(primeraletra)+texto.substring(1, texto.length() );
+       NOM.setText(texto);
+     }
+    
+        char c=evt.getKeyChar();
+     if (Character.isDigit(c)){
+         evt.consume();
+    }//GEN-LAST:event_NOMKeyTyped
+ 
+    }
+    private void APEKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_APEKeyTyped
+    String texto= APE.getText();
+    if(texto.length()>0) {
+         char primeraletra=texto.charAt(0);
+         texto=Character.toUpperCase(primeraletra)+texto.substring(1, texto.length() );
+        APE.setText(texto);
+    }   
+        
+    char c=evt.getKeyChar();
+     if (Character.isDigit(c)){
+         evt.consume();
+    }//GEN-LAST:event_APEKeyTyped
+    }
+    private void modiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modiActionPerformed
+        String d, n, a, c,s,cl;
+       d=DOC.getText();
+       n=NOM.getText();
+       a=APE.getText();
+       c=CATE.getText();
+       s=SAL.getText();
+       cl=CLAVE.getText();
+        modificar(d, n, a, c,s,cl);
+        cargatabla();
+    }//GEN-LAST:event_modiActionPerformed
+
+    private void NOMKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_NOMKeyReleased
+      
+    }//GEN-LAST:event_NOMKeyReleased
+    
+    private void DOCKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_DOCKeyPressed
+    if(evt.getKeyCode()==evt.VK_ENTER){
+    NOM.requestFocus();
+    }//GEN-LAST:event_DOCKeyPressed
+    }
+    private void APEKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_APEKeyReleased
+       
+    }//GEN-LAST:event_APEKeyReleased
+    
+    private void CATEKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_CATEKeyReleased
+        // TODO add your handling code here:
+    }//GEN-LAST:event_CATEKeyReleased
+
+    private void APEKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_APEKeyPressed
+        if(evt.getKeyCode()==evt.VK_ENTER){
+         CATE.requestFocus();
+    }//GEN-LAST:event_APEKeyPressed
+    }
+    private void NOMKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_NOMKeyPressed
+    if(evt.getKeyCode()==evt.VK_ENTER){
+        APE.requestFocus();
+    }//GEN-LAST:event_NOMKeyPressed
+    }
+    private void CATEKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_CATEKeyPressed
+        if(evt.getKeyCode()==evt.VK_ENTER){
+      SAL.requestFocus();
+    }//GEN-LAST:event_CATEKeyPressed
+    }
+    private void SALKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_SALKeyPressed
+      if(evt.getKeyCode()==evt.VK_ENTER){
+        CLAVE.requestFocus();
+    }//GEN-LAST:event_SALKeyPressed
+    }
+    private void busKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_busKeyReleased
+    
+    }//GEN-LAST:event_busKeyReleased
+
+    private void busMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_busMouseClicked
+     filtrar();
+    }//GEN-LAST:event_busMouseClicked
+
+    private void profesorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_profesorMouseClicked
+    listardatos();
+    }//GEN-LAST:event_profesorMouseClicked
+
+    private void ingresarKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ingresarKeyPressed
+    if(evt.getKeyCode()==evt.VK_TAB){
+     modi.requestFocus();
+    }
+    }//GEN-LAST:event_ingresarKeyPressed
+
+    private void modiKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_modiKeyPressed
+       if(evt.getKeyCode()==evt.VK_TAB){
+   elim.requestFocus();
+    }//GEN-LAST:event_modiKeyPressed
+    }
+    private void elimKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_elimKeyPressed
+        if(evt.getKeyCode()==evt.VK_TAB){
+   lim.requestFocus();
+    }//GEN-LAST:event_elimKeyPressed
+    }
+    private void limKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_limKeyPressed
+      if(evt.getKeyCode()==evt.VK_ENTER){
+  bus.requestFocus();
+    }//GEN-LAST:event_limKeyPressed
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField APE;
+    private javax.swing.JTextField CATE;
+    private javax.swing.JTextField CLAVE;
+    private javax.swing.JTextField DOC;
+    private javax.swing.JTextField FILTRO;
+    private javax.swing.JTextField NOM;
+    private javax.swing.JTextField SAL;
+    private javax.swing.JButton bus;
+    private javax.swing.JButton elim;
+    private javax.swing.JButton ingresar;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JButton lim;
+    private javax.swing.JButton modi;
+    private javax.swing.JTable profesor;
+    // End of variables declaration//GEN-END:variables
+}
